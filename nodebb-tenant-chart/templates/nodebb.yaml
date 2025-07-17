@@ -37,7 +37,8 @@ spec:
         - name: init-uploads
           image: elestio/nodebb:latest
           securityContext:
-            privileged: true
+            runAsUser: 0
+            runAsGroup: 0
           command:
             - /bin/sh
             - -c
@@ -54,7 +55,8 @@ spec:
         - name: restore-config
           image: elestio/nodebb:latest
           securityContext:
-            privileged: true
+            runAsUser: 0
+            runAsGroup: 0
           command:
             - /bin/sh
             - -c
