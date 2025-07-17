@@ -15,7 +15,7 @@ nodebb:
   adminEmail: admin@e2.co.za
   adminPassword: adminpass
 service:
-  type: LoadBalancer  #NodePort or LoadBalancer
+  type: NodePort  #NodePort or LoadBalancer
 persistence:
   nodebb:
     size: 2Gi
