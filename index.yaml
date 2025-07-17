@@ -3,13 +3,13 @@ entries:
   nodebb-tenant-chart:
   - apiVersion: v2
     appVersion: 1.19.0
-    created: "2025-07-17T20:42:48.766371788+02:00"
+    created: "2025-07-17T20:54:29.407590674+02:00"
     description: NodeBB + MongoDB + Redis per-tenant deployment with embedded MongoDB
       bootstrap logic
-    digest: f3df9d4788d133b4d66f2858df48b074ceb962d9451af62500eccd6b55cce694
+    digest: 797c8349c45ba6abe42600b4dc99b0020530850891ceb2248ac24234314d08c8
     name: nodebb-tenant-chart
     type: application
     urls:
     - https://github.com/pjanprinsloo/nodebb-helm.git/nodebb-tenant-chart-0.6.0.tgz
     version: 0.6.0
-generated: "2025-07-17T20:42:48.76562382+02:00"
+generated: "2025-07-17T20:54:29.407209879+02:00"

@@ -41,12 +41,12 @@ spec:
             - -c
             - |
               echo "Copying config.json to shared volume if not present..."
-              [ ! -f /mnt/config/config.json ] && cp /config/config.json /mnt/config/config.json
+              [ ! -f /mnt/shared/config.json ] && cp /config/config.json /mnt/shared/config.json
           volumeMounts:
             - name: config-volume
               mountPath: /config
             - name: shared-storage
-              mountPath: /mnt/config
+              mountPath: /mnt/shared
       containers:
         - name: nodebb
           image: elestio/nodebb:latest
@@ -59,7 +59,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              cp /mnt/config/config.json /app/config.json
+              cp /mnt/shared/config.json /app/config.json
               ./nodebb build || true
               ./nodebb start
           lifecycle:
@@ -78,8 +78,7 @@ spec:
             - name: shared-storage
               mountPath: /app/data
             - name: shared-storage
-              mountPath: /mnt/config/config.json
-              subPath: config.json
+              mountPath: /mnt/shared
       volumes:
         - name: uploads
           persistentVolumeClaim:
