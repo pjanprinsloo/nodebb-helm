@@ -1,0 +1,24 @@
+tenant: tenant
+
+mongo:
+  username: root
+  password: example
+  dbUser: nodebbuser
+  dbPass: nodebbpass
+
+redis:
+  password: redispass123
+
+nodebb:
+  domain: forum.tenant.e2.co.za
+  adminUser: admin
+  adminEmail: admin@e2.co.za
+  adminPassword: adminpass
+service:
+  type: LoadBalancer  #NodePort or LoadBalancer
+persistence:
+  nodebb:
+    size: 2Gi
+  mongo:
+    size: 2Gi
+

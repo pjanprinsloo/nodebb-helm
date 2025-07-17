@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nodebb-uploads-{{ .Values.tenant }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.nodebb.size | default "10Gi" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nodebb-shared-{{ .Values.tenant }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.nodebb.sharedSize | default "2Gi" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodebb-{{ .Values.tenant }}
+spec:
+  selector:
+    matchLabels:
+      app: nodebb-{{ .Values.tenant }}
+  template:
+    metadata:
+      labels:
+        app: nodebb-{{ .Values.tenant }}
+    spec:
+      initContainers:
+        - name: init-config
+          image: busybox
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Copying config.json to shared volume..."
+              cp /config/config.json /mnt/config/config.json
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+            - name: shared-storage
+              mountPath: /mnt/config
+      containers:
+        - name: nodebb
+          image: elestio/nodebb:latest
+          ports:
+            - containerPort: 4567
+          env:
+            - name: NODE_ENV
+              value: production
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cp /mnt/config/config.json /app/config.json
+              ./nodebb build || true
+              ./nodebb start
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    sleep 10
+                    ./nodebb reset -u {{ .Values.nodebb.adminUser }} || true
+                    ./nodebb adduser {{ .Values.nodebb.adminUser }} {{ .Values.nodebb.adminPassword }} {{ .Values.nodebb.adminEmail }} admin || true
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/public/uploads
+            - name: shared-storage
+              mountPath: /app/data
+            - name: shared-storage
+              mountPath: /mnt/config/config.json
+              subPath: config.json
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: nodebb-uploads-{{ .Values.tenant }}
+        - name: config-volume
+          configMap:
+            name: nodebb-config-{{ .Values.tenant }}
+        - name: shared-storage
+          persistentVolumeClaim:
+            claimName: nodebb-shared-{{ .Values.tenant }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodebb-{{ .Values.tenant }}
+spec:
+  selector:
+    app: nodebb-{{ .Values.tenant }}
+  ports:
+    - port: 80
+      targetPort: 4567
+  type: {{ .Values.service.type | default "LoadBalancer" }}

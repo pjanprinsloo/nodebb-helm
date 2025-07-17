@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc-{{ .Values.tenant }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+       storage: {{ .Values.persistence.mongo.size | default "100Gi" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-{{ .Values.tenant }}
+spec:
+  selector:
+    matchLabels:
+      app: mongo-{{ .Values.tenant }}
+  template:
+    metadata:
+      labels:
+        app: mongo-{{ .Values.tenant }}
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:6
+          command: ["/bin/bash", "/scripts/mongo-start.sh"]
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+            - name: script-volume
+              mountPath: /scripts
+              readOnly: true
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: mongo-pvc-{{ .Values.tenant }}
+        - name: script-volume
+          configMap:
+            name: mongo-start-script-{{ .Values.tenant }}
+            defaultMode: 0755
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-{{ .Values.tenant }}
+spec:
+  selector:
+    app: mongo-{{ .Values.tenant }}
+  ports:
+    - port: 27017
