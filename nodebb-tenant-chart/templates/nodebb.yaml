@@ -40,8 +40,8 @@ spec:
             - /bin/sh
             - -c
             - |
-              echo "Copying config.json to shared volume..."
-              cp /config/config.json /mnt/config/config.json
+              echo "Copying config.json to shared volume if not present..."
+              [ ! -f /mnt/config/config.json ] && cp /config/config.json /mnt/config/config.json
           volumeMounts:
             - name: config-volume
               mountPath: /config
