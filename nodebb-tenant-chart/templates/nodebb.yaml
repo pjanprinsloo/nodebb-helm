@@ -44,6 +44,8 @@ spec:
               if [ -z "$(ls -A /mnt/uploads)" ]; then
                 cp -r /usr/src/app/public/uploads/* /mnt/uploads/
               fi
+              echo "Fixing ownership..."
+              chown -R node:node /mnt/uploads
           volumeMounts:
             - name: uploads
               mountPath: /mnt/uploads
@@ -56,6 +58,7 @@ spec:
               echo "Restoring config.json if it exists..."
               if [ -f /mnt/config/config.json ]; then
                 cp /mnt/config/config.json /usr/src/app/config.json
+                chown node:node /usr/src/app/config.json
               fi
           volumeMounts:
             - name: config-volume
