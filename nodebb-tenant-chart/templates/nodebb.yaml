@@ -7,7 +7,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.persistence.nodebb.appSize | default "20Gi" }}
+      storage: {{ .Values.persistence.nodebb.appSize | default "5Gi" }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -30,13 +30,6 @@ spec:
           env:
             - name: NODE_ENV
               value: production
-          command:
-            - /bin/sh
-            - -c
-            - |
-              echo "Starting NodeBB..."
-              ./nodebb build || true
-              ./nodebb start
           volumeMounts:
             - name: app-dir
               mountPath: /usr/src/app
