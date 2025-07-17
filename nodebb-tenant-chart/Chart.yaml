@@ -1,6 +1,6 @@
 apiVersion: v2
 name: nodebb-tenant-chart
-description: NodeBB + MongoDB + Redis per-tenant deployment with embedded MongoDB bootstrap logic
+description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded MongoDB bootstrap logic
 type: application
-version: 0.6.0
+version: 0.6.1
 appVersion: "1.19.0"
