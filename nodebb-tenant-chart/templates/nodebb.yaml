@@ -33,26 +33,6 @@ spec:
       labels:
         app: nodebb-{{ .Values.tenant }}
     spec:
-      initContainers:
-        - name: init-config
-          image: busybox
-          command:
-            - /bin/sh
-            - -c
-            - |
-              echo "Checking shared volume for config.json..."
-              if [ -f /mnt/shared/config/config.json ]; then
-                echo "config.json already exists. Skipping copy."
-              else
-                echo "Copying config.json to shared volume..."
-                cp /config/config.json /mnt/shared/config/config.json
-              fi
-          volumeMounts:
-            - name: config-volume
-              mountPath: /config/config.json
-              subPath: config.json
-            - name: shared-storage
-              mountPath: /mnt/shared/config
       containers:
         - name: nodebb
           image: elestio/nodebb:latest
@@ -65,19 +45,12 @@ spec:
             - /bin/sh
             - -c
             - |
-              cp /mnt/shared/config/config.json /app/config.json
+              if [ -f /mnt/shared/config/config.json ]; then
+                echo "Using persisted config.json"
+                cp /mnt/shared/config/config.json /app/config.json
+              fi
               ./nodebb build || true
               ./nodebb start
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    sleep 10
-                    ./nodebb reset -u {{ .Values.nodebb.adminUser }} || true
-                    ./nodebb adduser {{ .Values.nodebb.adminUser }} {{ .Values.nodebb.adminPassword }} {{ .Values.nodebb.adminEmail }} admin || true
           volumeMounts:
             - name: uploads
               mountPath: /app/public/uploads
@@ -89,9 +62,6 @@ spec:
         - name: uploads
           persistentVolumeClaim:
             claimName: nodebb-uploads-{{ .Values.tenant }}
-        - name: config-volume
-          configMap:
-            name: nodebb-config-{{ .Values.tenant }}
         - name: shared-storage
           persistentVolumeClaim:
             claimName: nodebb-shared-{{ .Values.tenant }}
