@@ -18,7 +18,7 @@ service:
   type: NodePort  #NodePort or LoadBalancer
 persistence:
   nodebb:
-    size: 2Gi
+    appSize: 2Gi
   mongo:
     size: 2Gi
 

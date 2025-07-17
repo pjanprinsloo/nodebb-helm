@@ -1,24 +1,13 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nodebb-uploads-{{ .Values.tenant }}
+  name: nodebb-app-{{ .Values.tenant }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.persistence.nodebb.size | default "10Gi" }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nodebb-shared-{{ .Values.tenant }}
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: {{ .Values.persistence.nodebb.sharedSize | default "2Gi" }}
+      storage: {{ .Values.persistence.nodebb.appSize | default "20Gi" }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -45,26 +34,16 @@ spec:
             - /bin/sh
             - -c
             - |
-              if [ -f /mnt/shared/config/config.json ]; then
-                echo "Using persisted config.json"
-                cp /mnt/shared/config/config.json /app/config.json
-              fi
+              echo "Starting NodeBB..."
               ./nodebb build || true
               ./nodebb start
           volumeMounts:
-            - name: uploads
-              mountPath: /app/public/uploads
-            - name: shared-storage
-              mountPath: /app/data
-            - name: shared-storage
-              mountPath: /mnt/shared
+            - name: app-dir
+              mountPath: /usr/src/app
       volumes:
-        - name: uploads
+        - name: app-dir
           persistentVolumeClaim:
-            claimName: nodebb-uploads-{{ .Values.tenant }}
-        - name: shared-storage
-          persistentVolumeClaim:
-            claimName: nodebb-shared-{{ .Values.tenant }}
+            claimName: nodebb-app-{{ .Values.tenant }}
 ---
 apiVersion: v1
 kind: Service
