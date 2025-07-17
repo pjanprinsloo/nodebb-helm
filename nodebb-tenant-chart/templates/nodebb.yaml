@@ -34,8 +34,21 @@ spec:
         app: nodebb-{{ .Values.tenant }}
     spec:
       initContainers:
-        - name: init-config
-          image: busybox
+        - name: init-uploads
+          image: elestio/nodebb:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Seeding uploads if empty..."
+              if [ -z "$(ls -A /mnt/uploads)" ]; then
+                cp -r /usr/src/app/public/uploads/* /mnt/uploads/
+              fi
+          volumeMounts:
+            - name: uploads
+              mountPath: /mnt/uploads
+        - name: restore-config
+          image: elestio/nodebb:latest
           command:
             - /bin/sh
             - -c
@@ -47,6 +60,9 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /mnt/config
+            - name: app-dir
+              mountPath: /usr/src/app
+              readOnly: false
       containers:
         - name: nodebb
           image: elestio/nodebb:latest
@@ -78,6 +94,8 @@ spec:
         - name: config-volume
           persistentVolumeClaim:
             claimName: nodebb-config-{{ .Values.tenant }}
+        - name: app-dir
+          emptyDir: {}  # Needed to allow write access during init container
 ---
 apiVersion: v1
 kind: Service
