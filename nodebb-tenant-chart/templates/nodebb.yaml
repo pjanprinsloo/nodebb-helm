@@ -36,19 +36,21 @@ spec:
       initContainers:
         - name: init-uploads
           image: elestio/nodebb:latest
+          securityContext:
+            privileged: true
           command:
             - /bin/sh
             - -c
             - |
               echo "Seeding uploads if empty..."
-              if [ -z "$(ls -A /mnt/uploads)" ]; then
-                cp -r /usr/src/app/public/uploads/* /mnt/uploads/
+              if [ -z "$(ls -A /usr/src/app/public/uploads)" ]; then
+                cp -r /usr/src/app/public/uploads/* /usr/src/app/public/uploads/
               fi
               echo "Fixing ownership..."
-              chown -R node:node /mnt/uploads
+              chown -R node:node /usr/src/app/public/uploads
           volumeMounts:
             - name: uploads
-              mountPath: /mnt/uploads
+              mountPath: /usr/src/app/public/uploads
         - name: restore-config
           image: elestio/nodebb:latest
           command:
@@ -89,7 +91,6 @@ spec:
                     echo "Backing up config.json before shutdown..."
                     if [ -f /usr/src/app/config.json ]; then
                       cp /usr/src/app/config.json /mnt/config/config.json
-                    fi
       volumes:
         - name: uploads
           persistentVolumeClaim:
