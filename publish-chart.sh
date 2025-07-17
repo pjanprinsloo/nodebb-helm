@@ -11,7 +11,7 @@ helm package "$CHART_DIR" -d "$CHART_PACKAGE_OUTPUT"
 
 # Update the Helm repo index
 echo "🔄 Updating Helm repo index..."
-helm repo index "$CHART_PACKAGE_OUTPUT" --url https://pjanprinsloo.github.io/nodebb-helm/
+helm repo index "$CHART_PACKAGE_OUTPUT" --url https://github.com/pjanprinsloo/nodebb-helm.git
 
 # Stage changes
 echo "📂 Staging files..."
