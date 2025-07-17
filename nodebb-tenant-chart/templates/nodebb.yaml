@@ -1,13 +1,24 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: nodebb-app-{{ .Values.tenant }}
+  name: nodebb-uploads-{{ .Values.tenant }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.persistence.nodebb.appSize | default "5Gi" }}
+      storage: {{ .Values.persistence.nodebb.uploadSize | default "2Gi" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nodebb-config-{{ .Values.tenant }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.nodebb.configSize | default "100Mi" }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -22,6 +33,20 @@ spec:
       labels:
         app: nodebb-{{ .Values.tenant }}
     spec:
+      initContainers:
+        - name: init-config
+          image: busybox
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Restoring config.json if it exists..."
+              if [ -f /mnt/config/config.json ]; then
+                cp /mnt/config/config.json /usr/src/app/config.json
+              fi
+          volumeMounts:
+            - name: config-volume
+              mountPath: /mnt/config
       containers:
         - name: nodebb
           image: elestio/nodebb:latest
@@ -31,12 +56,28 @@ spec:
             - name: NODE_ENV
               value: production
           volumeMounts:
-            - name: app-dir
-              mountPath: /usr/src/app
+            - name: uploads
+              mountPath: /usr/src/app/public/uploads
+            - name: config-volume
+              mountPath: /mnt/config
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    echo "Backing up config.json before shutdown..."
+                    if [ -f /usr/src/app/config.json ]; then
+                      cp /usr/src/app/config.json /mnt/config/config.json
+                    fi
       volumes:
-        - name: app-dir
+        - name: uploads
           persistentVolumeClaim:
-            claimName: nodebb-app-{{ .Values.tenant }}
+            claimName: nodebb-uploads-{{ .Values.tenant }}
+        - name: config-volume
+          persistentVolumeClaim:
+            claimName: nodebb-config-{{ .Values.tenant }}
 ---
 apiVersion: v1
 kind: Service
