@@ -33,7 +33,7 @@ spec:
       labels:
         app: nodebb-{{ .Values.tenant }}
     spec:
-      terminationGracePeriodSeconds: 30  # <--- ADDED HERE
+      terminationGracePeriodSeconds: 30
       initContainers:
         - name: init-uploads
           image: elestio/nodebb:latest
@@ -68,10 +68,18 @@ spec:
             - /bin/sh
             - -c
             - |
-              echo "Restoring config.json if it exists..."
+              echo "Restoring config.json and package files if they exist..."
               if [ -f /mnt/config/config.json ]; then
                 cp /mnt/config/config.json /usr/src/app/config.json
                 chown node:node /usr/src/app/config.json
+              fi
+              if [ -f /mnt/config/package.json ]; then
+                cp /mnt/config/package.json /usr/src/app/package.json
+                chown node:node /usr/src/app/package.json
+              fi
+              if [ -f /mnt/config/package-lock.json ]; then
+                cp /mnt/config/package-lock.json /usr/src/app/package-lock.json
+                chown node:node /usr/src/app/package-lock.json
               fi
               ./nodebb build || true
               ./nodebb start
@@ -88,13 +96,17 @@ spec:
                   - /bin/sh
                   - -c
                   - |
-                    echo "Backing up config.json before shutdown..."
+                    echo "Backing up config.json and package files before shutdown..."
                     if [ -f /usr/src/app/config.json ]; then
-                      cp /usr/src/app/config.json /mnt/config/config.json && echo "Backup complete."
-                      chown node:node /mnt/config/config.json || echo "Chown failed"
-                    else
-                      echo "No config.json to back up."
+                      cp /usr/src/app/config.json /mnt/config/config.json && echo "config.json backed up."
                     fi
+                    if [ -f /usr/src/app/package.json ]; then
+                      cp /usr/src/app/package.json /mnt/config/package.json && echo "package.json backed up."
+                    fi
+                    if [ -f /usr/src/app/package-lock.json ]; then
+                      cp /usr/src/app/package-lock.json /mnt/config/package-lock.json && echo "package-lock.json backed up."
+                    fi
+                    chown node:node /mnt/config/config.json /mnt/config/package*.json || echo "Chown failed"
       volumes:
         - name: uploads
           persistentVolumeClaim:
