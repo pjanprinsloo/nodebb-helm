@@ -4,6 +4,7 @@ This Helm chart deploys a **per-tenant instance of NodeBB** bundled with **Mongo
 
 ## 🧰 Features
 
+- Custom K3s Compatible helm chart developed for E2
 - NodeBB forum with admin user bootstrap
 - MongoDB and Redis sidecars
 - Persistent volumes for uploads and config
