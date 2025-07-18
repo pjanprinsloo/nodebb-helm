@@ -33,6 +33,42 @@ spec:
       labels:
         app: nodebb-{{ .Values.tenant }}
     spec:
+      initContainers:
+        - name: init-uploads
+          image: elestio/nodebb:latest
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Seeding uploads if empty..."
+              if [ -z "$(ls -A /mnt/uploads)" ]; then
+                cp -r /usr/src/app/public/uploads/* /mnt/uploads/
+              fi
+              echo "Fixing ownership..."
+              chown -R node:node /mnt/uploads
+          volumeMounts:
+            - name: uploads
+              mountPath: /mnt/uploads
+        - name: restore-config
+          image: elestio/nodebb:latest
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Restoring config.json if it exists..."
+              if [ -f /mnt/config/config.json ]; then
+                cp /mnt/config/config.json /usr/src/app/config.json
+                chown node:node /usr/src/app/config.json
+              fi
+          volumeMounts:
+            - name: config-volume
+              mountPath: /mnt/config
       containers:
         - name: nodebb
           image: elestio/nodebb:latest
@@ -41,6 +77,28 @@ spec:
           env:
             - name: NODE_ENV
               value: production
+          command:
+            - /bin/sh
+            - -c
+            - |
+              ./nodebb build || true
+              ./nodebb start
+          volumeMounts:
+            - name: uploads
+              mountPath: /usr/src/app/public/uploads
+            - name: config-volume
+              mountPath: /mnt/config
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    echo "Backing up config.json before shutdown..."
+                    if [ -f /usr/src/app/config.json ]; then
+                      cp /usr/src/app/config.json /mnt/config/config.json
+                      chown node:node /mnt/config/config.json
       volumes:
         - name: uploads
           persistentVolumeClaim:
