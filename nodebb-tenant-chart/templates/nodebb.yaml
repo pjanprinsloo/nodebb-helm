@@ -81,6 +81,7 @@ spec:
                 cp /mnt/config/package-lock.json /usr/src/app/package-lock.json
                 chown node:node /usr/src/app/package-lock.json
               fi
+              ./nodebb stop
               ./nodebb build || true
               ./nodebb start
           volumeMounts:
