@@ -33,6 +33,7 @@ spec:
       labels:
         app: nodebb-{{ .Values.tenant }}
     spec:
+      terminationGracePeriodSeconds: 30  # <--- ADDED HERE
       initContainers:
         - name: init-uploads
           image: elestio/nodebb:latest
@@ -52,8 +53,14 @@ spec:
           volumeMounts:
             - name: uploads
               mountPath: /mnt/uploads
-        - name: restore-config
+      containers:
+        - name: nodebb
           image: elestio/nodebb:latest
+          ports:
+            - containerPort: 4567
+          env:
+            - name: NODE_ENV
+              value: production
           securityContext:
             runAsUser: 0
             runAsGroup: 0
@@ -66,21 +73,6 @@ spec:
                 cp /mnt/config/config.json /usr/src/app/config.json
                 chown node:node /usr/src/app/config.json
               fi
-          volumeMounts:
-            - name: config-volume
-              mountPath: /mnt/config
-      containers:
-        - name: nodebb
-          image: elestio/nodebb:latest
-          ports:
-            - containerPort: 4567
-          env:
-            - name: NODE_ENV
-              value: production
-          command:
-            - /bin/sh
-            - -c
-            - |
               ./nodebb build || true
               ./nodebb start
           volumeMounts:
@@ -88,6 +80,7 @@ spec:
               mountPath: /usr/src/app/public/uploads
             - name: config-volume
               mountPath: /mnt/config
+              readOnly: false
           lifecycle:
             preStop:
               exec:
@@ -97,8 +90,11 @@ spec:
                   - |
                     echo "Backing up config.json before shutdown..."
                     if [ -f /usr/src/app/config.json ]; then
-                      cp /usr/src/app/config.json /mnt/config/config.json
-                      chown node:node /mnt/config/config.json
+                      cp /usr/src/app/config.json /mnt/config/config.json && echo "Backup complete."
+                      chown node:node /mnt/config/config.json || echo "Chown failed"
+                    else
+                      echo "No config.json to back up."
+                    fi
       volumes:
         - name: uploads
           persistentVolumeClaim:
