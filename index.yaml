@@ -2,8 +2,19 @@ apiVersion: v1
 entries:
   nodebb-tenant-chart:
   - apiVersion: v2
+    appVersion: 1.19.1
+    created: "2025-07-18T03:56:58.734192139+02:00"
+    description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
+      MongoDB bootstrap logic
+    digest: 7dab438014b02e16187c5582c52353e526bd2fc42a448f25b306d1a0bb6a7b20
+    name: nodebb-tenant-chart
+    type: application
+    urls:
+    - https://github.com/pjanprinsloo/nodebb-helm.git/nodebb-tenant-chart-0.6.4-beta.tgz
+    version: 0.6.4-beta
+  - apiVersion: v2
     appVersion: 1.19.0
-    created: "2025-07-18T03:51:32.844022017+02:00"
+    created: "2025-07-18T03:56:58.734008707+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: 153d69e3a98342f5104bd99d33e163d1b070ecf8c51da79ba45e1844d3a63a71
@@ -14,7 +25,7 @@ entries:
     version: 0.6.3
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2025-07-18T03:51:32.843834725+02:00"
+    created: "2025-07-18T03:56:58.733826596+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: b6b8e474c5592c3e84b9d8cd7a1e2cecab7362facfb2bb1475c4578e41c9436e
@@ -25,7 +36,7 @@ entries:
     version: 0.6.3-beta
   - apiVersion: v2
     appVersion: 1.19.0
-    created: "2025-07-18T03:51:32.843605483+02:00"
+    created: "2025-07-18T03:56:58.733633834+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: 144cca5a764092420d6bc39562c0abc69e642f8ba3d3072c3f5973aeea1bd198
@@ -36,7 +47,7 @@ entries:
     version: 0.6.1
   - apiVersion: v2
     appVersion: 1.19.0
-    created: "2025-07-18T03:51:32.843344171+02:00"
+    created: "2025-07-18T03:56:58.733426712+02:00"
     description: NodeBB + MongoDB + Redis per-tenant deployment with embedded MongoDB
       bootstrap logic
     digest: b58c58c84a925ac3616dae1d5bd9b3060d39c279304ae333cf4b919d3d45d377
@@ -45,4 +56,4 @@ entries:
     urls:
     - https://github.com/pjanprinsloo/nodebb-helm.git/nodebb-tenant-chart-0.6.0.tgz
     version: 0.6.0
-generated: "2025-07-18T03:51:32.842609373+02:00"
+generated: "2025-07-18T03:56:58.733141059+02:00"
