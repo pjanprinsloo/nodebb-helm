@@ -19,6 +19,8 @@ spec:
           ports:
             - containerPort: 4567
           env:
+            - name: SETUP
+              value: "{{ .Values.nodebb.setup | quote }}"
             - name: MONGODB_USER
               valueFrom:
                 secretKeyRef:
@@ -60,5 +62,10 @@ spec:
                 "upload_path": "https://{{ .Values.nodebb.config.azure.accountName }}.blob.core.windows.net/{{ .Values.nodebb.config.azure.containerName }}/?${AZURE_SAS_TOKEN}"
               }
               EOF
-              ./nodebb build || true
-              ./nodebb start
+
+              if [ "$SETUP" = "true" ]; then
+                ./nodebb setup --config=/usr/src/app/config.json
+              else
+                ./nodebb build || true
+                ./nodebb start
+              fi

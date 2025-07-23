@@ -3,10 +3,10 @@ entries:
   nodebb-tenant-chart:
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2025-07-23T11:15:04.278768456+02:00"
+    created: "2025-07-23T11:51:33.902037648+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
-    digest: 5d065ec0d07bf86804f805a2e3a7943f5b8f20cfd83d3f12d4388773a466acd1
+    digest: b72e7a29305e375e184eefe8028a6614461c8379dee79c9254684e7e6cfa0638
     name: nodebb-tenant-chart
     type: application
     urls:
@@ -14,7 +14,7 @@ entries:
     version: 1.0.8
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2025-07-23T11:15:04.278565464+02:00"
+    created: "2025-07-23T11:51:33.901849227+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: 3849871f33e289aff0ae92972a19e2c108e46132a93e0d9623e5273131930e60
@@ -25,7 +25,7 @@ entries:
     version: 1.0.7
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2025-07-23T11:15:04.278364552+02:00"
+    created: "2025-07-23T11:51:33.901624914+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: e5de92e4c8fe08908a468269c6342ea63f99e04ef823d10fc44ac44e7125ed57
@@ -36,7 +36,7 @@ entries:
     version: 1.0.6
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2025-07-23T11:15:04.27813579+02:00"
+    created: "2025-07-23T11:51:33.901419172+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: df368cd42cd9c30f0b59b7327ba94697c2588ba40d96ab8fdb02a4dd74a4ef71
@@ -47,7 +47,7 @@ entries:
     version: 0.6.6
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2025-07-23T11:15:04.277979919+02:00"
+    created: "2025-07-23T11:51:33.9011566+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: ad06c7d753043aed58b0af681baf8a4c0eec48f73cf6a697055ad070fb52fb78
@@ -58,7 +58,7 @@ entries:
     version: 0.6.5
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2025-07-23T11:15:04.277835747+02:00"
+    created: "2025-07-23T11:51:33.900901398+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: e8b503d6897b22a1baa15a7197f7656aaf24c4c0d225db8c50af01f21f41b458
@@ -69,7 +69,7 @@ entries:
     version: 0.6.4
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2025-07-23T11:15:04.277691056+02:00"
+    created: "2025-07-23T11:51:33.900417323+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: 7dab438014b02e16187c5582c52353e526bd2fc42a448f25b306d1a0bb6a7b20
@@ -80,7 +80,7 @@ entries:
     version: 0.6.4-beta
   - apiVersion: v2
     appVersion: 1.19.0
-    created: "2025-07-23T11:15:04.277514374+02:00"
+    created: "2025-07-23T11:51:33.899937168+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: 153d69e3a98342f5104bd99d33e163d1b070ecf8c51da79ba45e1844d3a63a71
@@ -91,7 +91,7 @@ entries:
     version: 0.6.3
   - apiVersion: v2
     appVersion: 1.19.1
-    created: "2025-07-23T11:15:04.277348493+02:00"
+    created: "2025-07-23T11:51:33.899728466+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: b6b8e474c5592c3e84b9d8cd7a1e2cecab7362facfb2bb1475c4578e41c9436e
@@ -102,7 +102,7 @@ entries:
     version: 0.6.3-beta
   - apiVersion: v2
     appVersion: 1.19.0
-    created: "2025-07-23T11:15:04.277165251+02:00"
+    created: "2025-07-23T11:51:33.899482504+02:00"
     description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded
       MongoDB bootstrap logic
     digest: 144cca5a764092420d6bc39562c0abc69e642f8ba3d3072c3f5973aeea1bd198
@@ -113,7 +113,7 @@ entries:
     version: 0.6.1
   - apiVersion: v2
     appVersion: 1.19.0
-    created: "2025-07-23T11:15:04.276965319+02:00"
+    created: "2025-07-23T11:51:33.899225751+02:00"
     description: NodeBB + MongoDB + Redis per-tenant deployment with embedded MongoDB
       bootstrap logic
     digest: b58c58c84a925ac3616dae1d5bd9b3060d39c279304ae333cf4b919d3d45d377
@@ -122,4 +122,4 @@ entries:
     urls:
     - https://github.com/pjanprinsloo/nodebb-helm.git/nodebb-tenant-chart-0.6.0.tgz
     version: 0.6.0
-generated: "2025-07-23T11:15:04.276707667+02:00"
+generated: "2025-07-23T11:51:33.898882388+02:00"

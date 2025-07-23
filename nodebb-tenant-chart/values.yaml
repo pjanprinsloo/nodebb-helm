@@ -4,6 +4,7 @@ image:
   pullPolicy: Always
 
 nodebb:
+  setup: true
   config:
     url: "http://nodebb.localhost"
     secret: "mysecret" # fallback secret, will be injected via secret in actual deployment
