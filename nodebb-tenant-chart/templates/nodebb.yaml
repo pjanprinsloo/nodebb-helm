@@ -12,23 +12,6 @@ spec:
       labels:
         app: nodebb
     spec:
-      initContainers:
-        - name: init-config
-          image: busybox
-          command:
-            - /bin/sh
-            - -c
-            - |
-              if [ ! -f /mnt/config/config.json ]; then
-                echo "Injecting initial config..."
-                cp /mnt/source/config.json /mnt/config/config.json
-              fi
-          volumeMounts:
-            - name: config-volume
-              mountPath: /mnt/config
-            - name: configmap-volume
-              mountPath: /mnt/source
-
       containers:
         - name: nodebb
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -37,32 +20,15 @@ spec:
             - containerPort: 4567
           env:
             - name: CONFIG_DIR
-              value: "/opt/config"
+              value: "/opt/config"                        # ✅ directory where config.json will be saved
             - name: CONFIG
-              value: "/opt/config/config.json"
-            - name: SETUP
-              value: "true"
+              value: "/opt/config/config.json"            # ✅ full path to config.json
             - name: PACKAGE_MANAGER
               value: "npm"
-
-            # ✅ Admin credentials as nested env vars using double underscores
-            - name: admin__username
-              value: "{{ .Values.nodebb.config.admin.username }}"
-            - name: admin__password
-              value: "{{ .Values.nodebb.config.admin.password }}"
-            - name: admin__password__confirm
-              value: "{{ .Values.nodebb.config.admin.password }}"
-            - name: admin__email
-              value: "{{ .Values.nodebb.config.admin.email }}"
-
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/config
-
+              mountPath: /opt/config                      # ✅ this is where config.json will live
       volumes:
         - name: config-volume
           persistentVolumeClaim:
-            claimName: nodebb-config
-        - name: configmap-volume
-          configMap:
-            name: nodebb-configmap
+            claimName: nodebb-config                      # make sure this PVC exists
