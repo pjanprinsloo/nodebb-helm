@@ -9,8 +9,13 @@ nodebb:
   config:
     url: "http://nodebb.localhost" # or use an Ingress later
     secret: "mysecret"
-    mongo:
-      uri: "mongodb://admin:pass@mongo.default.svc.cluster.local:27017/nodebb?authSource=admin"
+    mongodb:
+      host: mongo.default.svc.cluster.local
+      port: 27017
+      user: admin
+      password: pass
+      database: nodebb
+      authSource: admin
     admin:
       username: "admin"
       password: "changeme"
