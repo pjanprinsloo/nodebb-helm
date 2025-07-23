@@ -5,17 +5,16 @@ metadata:
 data:
   config.json: |
     {
-      "url": "{{ .Values.nodebb.config.url }}",
-      "secret": "{{ .Values.nodebb.config.secret }}",
+      "url": {{ .Values.nodebb.config.url | quote }},
+      "secret": {{ .Values.nodebb.config.secret | quote }},
       "database": "mongo",
       "mongo": {
-        "uri": "mongodb://{{ .Values.mongodb.user }}:{{ .Values.mongodb.password }}@{{ .Values.mongodb.host }}:{{ .Values.mongodb.port }}/{{ .Values.mongodb.database }}?authSource={{ .Values.mongodb.authSource }}"
+        "uri": "mongodb://{{ .Values.mongodb.user | quote }}:{{ .Values.mongodb.password | quote }}@{{ .Values.mongodb.host | quote }}:{{ .Values.mongodb.port }}/{{ .Values.mongodb.database | quote }}?authSource={{ .Values.mongodb.authSource | quote }}"
       },
       "admin": {
-        "username": "{{ .Values.nodebb.config.admin.username }}",
-        "password": "{{ .Values.nodebb.config.admin.password }}",
-        "password:confirm": "{{ .Values.nodebb.config.admin.password }}", # ← Add this
-        "email": "{{ .Values.nodebb.config.admin.email }}"
+        "username": {{ .Values.nodebb.config.admin.username | quote }},
+        "password": {{ .Values.nodebb.config.admin.password | quote }},
+        "email": {{ .Values.nodebb.config.admin.email | quote }}
       },
-      "upload_path": "https://{{ .Values.nodebb.config.azure.accountName }}.blob.core.windows.net/{{ .Values.nodebb.config.azure.containerName }}/?{{ .Values.nodebb.config.azure.sasToken }}"
+      "upload_path": "https://{{ .Values.nodebb.config.azure.accountName | quote }}.blob.core.windows.net/{{ .Values.nodebb.config.azure.containerName | quote }}/?{{ .Values.nodebb.config.azure.sasToken | quote }}"
     }
