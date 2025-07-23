@@ -4,4 +4,4 @@ description: E2 - NodeBB + MongoDB + Redis per-tenant deployment with embedded M
   bootstrap logic
 name: nodebb-tenant-chart
 type: application
-version: 2.1.7
+version: 2.2.7

@@ -17,6 +17,14 @@ nodebb:
       containerName: cxo-forum
       sasToken: '?sp=...'
 
+  persistence:
+    config:
+      size: 500Mi
+    build:
+      size: 500Mi
+    uploads:
+      size: 1Gi
+
 mongodb:
   host: 172.17.0.1
   port: 27017

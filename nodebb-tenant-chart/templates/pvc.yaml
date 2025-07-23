@@ -7,4 +7,26 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 500Mi
+      storage: {{ .Values.nodebb.persistence.config.size }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nodebb-build
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.nodebb.persistence.build.size }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nodebb-uploads
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.nodebb.persistence.uploads.size }}

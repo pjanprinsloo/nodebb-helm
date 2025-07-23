@@ -20,17 +20,27 @@ spec:
             - containerPort: 4567
           env:
             - name: CONFIG_DIR
-              value: "/opt/config"                        # ✅ directory where config.json will be saved
+              value: "/opt/config"
             - name: CONFIG
-              value: "/opt/config/config.json"            # ✅ full path to config.json
+              value: "/opt/config/config.json"
             - name: PACKAGE_MANAGER
               value: "npm"
             - name: START_BUILD
               value: "true"
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/config                      # ✅ this is where config.json will live
+              mountPath: /opt/config
+            - name: build-volume
+              mountPath: /usr/src/app/build
+            - name: uploads-volume
+              mountPath: /usr/src/app/public/uploads
       volumes:
         - name: config-volume
           persistentVolumeClaim:
-            claimName: nodebb-config                      # make sure this PVC exists
+            claimName: nodebb-config
+        - name: build-volume
+          persistentVolumeClaim:
+            claimName: nodebb-build
+        - name: uploads-volume
+          persistentVolumeClaim:
+            claimName: nodebb-uploads
