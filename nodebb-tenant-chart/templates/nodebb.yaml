@@ -41,7 +41,7 @@ spec:
             - name: PACKAGE_MANAGER
               value: "npm"
             - name: SETUP
-              value: "{{ .Values.nodebb.setup | quote }}"
+              value: "{{ .Values.nodebb.setup }}"
           volumeMounts:
             - name: config-volume
               mountPath: /opt/config
