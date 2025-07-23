@@ -28,6 +28,21 @@ This Helm chart deploys a **per-tenant instance of NodeBB** bundled with **Mongo
 
 ### Option 1: Install via Rancher UI (Git-based)
 
+Install Storage Class
+
+helm repo add azurefile-csi-driver https://raw.githubusercontent.com/kubernetes-sigs/azurefile-csi-driver/master/charts
+helm repo update
+
+helm install azurefile-csi azurefile-csi-driver/azurefile-csi-driver \
+  --namespace kube-system
+
+kubectl create secret generic azureblob-csi-secret \
+  --from-literal azurestorageaccountname=YOUR_ACCOUNT \
+  --from-literal azurestorageaccountsastoken='?sv=...' \
+  -n kube-system
+
+
+
 1. Go to **Apps > Repositories > Create**.
 2. Name the repo select Git as the repo method.
 3. Under *Repository URL*, enter:
@@ -146,5 +161,5 @@ helm install test-deploy ./nodebb-tenant-chart -f my-values.yaml --dry-run
 
 ## 🧑‍💻 Maintainer
 For E2
-**Peter-Jan Prinsloo**  
+**Peter-Jan Prinsloo**
 GitHub: [@pjanprinsloo](https://github.com/pjanprinsloo)

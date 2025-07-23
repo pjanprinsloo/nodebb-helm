@@ -4,8 +4,7 @@ metadata:
   name: nodebb-config
 spec:
   accessModes:
-    - ReadWriteMany
-  storageClassName: {{ .Values.storage.className }}
+    - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.storage.config.size }}
+      storage: 500Mi

@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/pjanprinsloo/e2-nodebb
-  tag: v1.0.6
+  tag: v1.0.7
   pullPolicy: Always
 
 nodebb:
@@ -28,9 +28,3 @@ mongodb:
 service:
   type: ClusterIP
   port: 80
-storage:
-  className: azureblob-sc
-  config:
-    size: 1Gi
-  uploads:
-    size: 50Gi
