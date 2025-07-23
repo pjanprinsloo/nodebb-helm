@@ -25,6 +25,8 @@ spec:
               value: "/opt/config/config.json"            # ✅ full path to config.json
             - name: PACKAGE_MANAGER
               value: "npm"
+            - name: START_BUILD
+              value: "true"
           volumeMounts:
             - name: config-volume
               mountPath: /opt/config                      # ✅ this is where config.json will live
