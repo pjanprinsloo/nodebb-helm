@@ -14,8 +14,8 @@ data:
       "admin": {
         "username": "{{ .Values.nodebb.config.admin.username }}",
         "password": "{{ .Values.nodebb.config.admin.password }}",
+        "password:confirm": "{{ .Values.nodebb.config.admin.password }}", # ← Add this
         "email": "{{ .Values.nodebb.config.admin.email }}"
       },
       "upload_path": "https://{{ .Values.nodebb.config.azure.accountName }}.blob.core.windows.net/{{ .Values.nodebb.config.azure.containerName }}/?{{ .Values.nodebb.config.azure.sasToken }}"
     }
-
