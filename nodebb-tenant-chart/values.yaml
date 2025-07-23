@@ -1,25 +1,25 @@
 tenant: tenant
 
-mongo:
-  username: root
-  password: example
-  dbUser: nodebbuser
-  dbPass: nodebbpass
-
-redis:
-  password: redispass123
+image:
+  repository: ghcr.io/pjanprinsloo/e2-nodebb
+  tag: v1.0.6
+  pullPolicy: Always
 
 nodebb:
-  domain: forum.tenant.e2.co.za
-  adminUser: admin
-  adminEmail: admin@e2.co.za
-  adminPassword: adminpass
-service:
-  type: NodePort  #NodePort or LoadBalancer
-persistence:
-  nodebb:
-    uploadSize: 2Gi
-    configSize: 2Mi
-  mongo:
-    size: 2Gi
+  config:
+    url: "http://nodebb.localhost" # or use an Ingress later
+    secret: "mysecret"
+    mongo:
+      uri: "mongodb://admin:pass@mongo.default.svc.cluster.local:27017/nodebb?authSource=admin"
+    admin:
+      username: "admin"
+      password: "changeme"
+      email: "admin@example.com"
+    azure:
+      accountName: "youraccount"
+      containerName: "nodebb-uploads"
+      sasToken: "?sp=..."
 
+service:
+  type: ClusterIP
+  port: 80

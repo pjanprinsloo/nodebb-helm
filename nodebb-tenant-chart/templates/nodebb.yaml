@@ -1,129 +1,43 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nodebb-uploads-{{ .Values.tenant }}
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: {{ .Values.persistence.nodebb.uploadSize | default "2Gi" }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nodebb-config-{{ .Values.tenant }}
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: {{ .Values.persistence.nodebb.configSize | default "100Mi" }}
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodebb-{{ .Values.tenant }}
+  name: nodebb
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: nodebb-{{ .Values.tenant }}
+      app: nodebb
   template:
     metadata:
       labels:
-        app: nodebb-{{ .Values.tenant }}
+        app: nodebb
     spec:
-      terminationGracePeriodSeconds: 30
-      initContainers:
-        - name: init-uploads
-          image: elestio/nodebb:latest
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          command:
-            - /bin/sh
-            - -c
-            - |
-              echo "Seeding uploads if empty..."
-              if [ -z "$(ls -A /mnt/uploads)" ]; then
-                cp -r /usr/src/app/public/uploads/* /mnt/uploads/
-              fi
-              echo "Fixing ownership..."
-              chown -R node:node /mnt/uploads
-          volumeMounts:
-            - name: uploads
-              mountPath: /mnt/uploads
       containers:
         - name: nodebb
-          image: elestio/nodebb:latest
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 4567
-          env:
-            - name: NODE_ENV
-              value: production
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
           command:
             - /bin/sh
             - -c
             - |
-              echo "Restoring config.json and package files if they exist..."
-              if [ -f /mnt/config/config.json ]; then
-                cp /mnt/config/config.json /usr/src/app/config.json
-                chown node:node /usr/src/app/config.json
-              fi
-              if [ -f /mnt/config/package.json ]; then
-                cp /mnt/config/package.json /usr/src/app/package.json
-                chown node:node /usr/src/app/package.json
-              fi
-              if [ -f /mnt/config/package-lock.json ]; then
-                cp /mnt/config/package-lock.json /usr/src/app/package-lock.json
-                chown node:node /usr/src/app/package-lock.json
-              fi
-              ./nodebb stop
+              echo "Creating config.json..."
+              cat <<EOF > /usr/src/app/config.json
+              {
+                "url": "{{ .Values.nodebb.config.url }}",
+                "secret": "{{ .Values.nodebb.config.secret }}",
+                "database": "mongo",
+                "mongo": {
+                  "uri": "mongodb://{{ .Values.mongodb.user }}:{{ .Values.mongodb.password }}@{{ .Values.mongodb.host }}:{{ .Values.mongodb.port }}/{{ .Values.mongodb.database }}?authSource={{ .Values.mongodb.authSource }}"
+                },
+                "admin": {
+                  "username": "{{ .Values.nodebb.config.admin.username }}",
+                  "password": "{{ .Values.nodebb.config.admin.password }}",
+                  "email": "{{ .Values.nodebb.config.admin.email }}"
+                },
+                "upload_path": "https://{{ .Values.nodebb.config.azure.accountName }}.blob.core.windows.net/{{ .Values.nodebb.config.azure.containerName }}/"
+              }
+              EOF
               ./nodebb build || true
               ./nodebb start
-          volumeMounts:
-            - name: uploads
-              mountPath: /usr/src/app/public/uploads
-            - name: config-volume
-              mountPath: /mnt/config
-              readOnly: false
-          lifecycle:
-            preStop:
-              exec:
-                command:
-                  - /bin/sh
-                  - -c
-                  - |
-                    echo "Backing up config.json and package files before shutdown..."
-                    if [ -f /usr/src/app/config.json ]; then
-                      cp /usr/src/app/config.json /mnt/config/config.json && echo "config.json backed up."
-                    fi
-                    if [ -f /usr/src/app/package.json ]; then
-                      cp /usr/src/app/package.json /mnt/config/package.json && echo "package.json backed up."
-                    fi
-                    if [ -f /usr/src/app/package-lock.json ]; then
-                      cp /usr/src/app/package-lock.json /mnt/config/package-lock.json && echo "package-lock.json backed up."
-                    fi
-                    chown node:node /mnt/config/config.json /mnt/config/package*.json || echo "Chown failed"
-      volumes:
-        - name: uploads
-          persistentVolumeClaim:
-            claimName: nodebb-uploads-{{ .Values.tenant }}
-        - name: config-volume
-          persistentVolumeClaim:
-            claimName: nodebb-config-{{ .Values.tenant }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nodebb-{{ .Values.tenant }}
-spec:
-  selector:
-    app: nodebb-{{ .Values.tenant }}
-  ports:
-    - port: 80
-      targetPort: 4567
-  type: {{ .Values.service.type | default "LoadBalancer" }}
