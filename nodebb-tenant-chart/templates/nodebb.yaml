@@ -29,14 +29,14 @@ spec:
                 "secret": "{{ .Values.nodebb.config.secret }}",
                 "database": "mongo",
                 "mongo": {
-                  "uri": "mongodb://{{ .Values.mongodb.user }}:{{ .Values.mongodb.password }}@{{ .Values.mongodb.host }}:{{ .Values.mongodb.port }}/{{ .Values.mongodb.database }}?authSource={{ .Values.mongodb.authSource }}"
+                  "uri": "mongodb://{{ .Values.nodebb.config.mongodb.user }}:{{ .Values.nodebb.config.mongodb.password }}@{{ .Values.nodebb.config.mongodb.host }}:{{ .Values.nodebb.config.mongodb.port }}/{{ .Values.nodebb.config.mongodb.database }}?authSource={{ .Values.nodebb.config.mongodb.authSource }}"
                 },
                 "admin": {
                   "username": "{{ .Values.nodebb.config.admin.username }}",
                   "password": "{{ .Values.nodebb.config.admin.password }}",
                   "email": "{{ .Values.nodebb.config.admin.email }}"
                 },
-                "upload_path": "https://{{ .Values.nodebb.config.azure.accountName }}.blob.core.windows.net/{{ .Values.nodebb.config.azure.containerName }}/"
+                "upload_path": "https://{{ .Values.nodebb.config.azure.accountName }}.blob.core.windows.net/{{ .Values.nodebb.config.azure.containerName }}/{{ .Values.nodebb.config.azure.sasToken }}"
               }
               EOF
               ./nodebb build || true
