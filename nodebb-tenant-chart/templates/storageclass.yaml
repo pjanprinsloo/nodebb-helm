@@ -1,0 +1,16 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Values.storage.className }}
+provisioner: blob.csi.azure.com
+parameters:
+  containerName: {{ .Values.nodebb.azure.containerName }}
+  storageAccount: {{ .Values.nodebb.azure.accountName }}
+  protocol: https
+  secretName: azureblob-secret
+  secretNamespace: {{ .Release.Namespace }}
+  azurestorageaccountsastoken: "true"
+  skuName: Standard_LRS
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+

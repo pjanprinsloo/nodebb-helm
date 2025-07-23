@@ -28,3 +28,9 @@ mongodb:
 service:
   type: ClusterIP
   port: 80
+storage:
+  className: azureblob-sc
+  config:
+    size: 1Gi
+  uploads:
+    size: 50Gi

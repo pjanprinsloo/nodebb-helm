@@ -29,8 +29,13 @@ spec:
               value: "true"
           volumeMounts:
             - name: config-volume
-              mountPath: /opt/config                      # ✅ this is where config.json will live
+              mountPath: /opt/config                      # ✅ config.json persisted here
+            - name: uploads-volume
+              mountPath: /usr/src/app/public/uploads      # ✅ persistent uploads
       volumes:
         - name: config-volume
           persistentVolumeClaim:
-            claimName: nodebb-config                      # make sure this PVC exists
+            claimName: nodebb-config                      # your Azure-backed config PVC
+        - name: uploads-volume
+          persistentVolumeClaim:
+            claimName: nodebb-uploads                     # your Azure-backed uploads PVC
