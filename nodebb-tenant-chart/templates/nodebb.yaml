@@ -42,6 +42,14 @@ spec:
               value: "npm"
             - name: SETUP
               value: "{{ .Values.nodebb.setup }}"
+            - name: admin:username
+              value: "{{ .Values.nodebb.config.admin.username }}"
+            - name: admin:password
+              value: "{{ .Values.nodebb.config.admin.password }}"
+            - name: admin:password:confirm
+              value: "{{ .Values.nodebb.config.admin.password }}"
+            - name: admin:email
+              value: "{{ .Values.nodebb.config.admin.email }}"
           volumeMounts:
             - name: config-volume
               mountPath: /opt/config

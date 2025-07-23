@@ -18,10 +18,10 @@ nodebb:
       sasToken: '?sp=...'
 
 mongodb:
-  host: mongo.default.svc.cluster.local
+  host: 172.17.0.1
   port: 27017
-  user: cxo
-  password: Hdfs#289!@#sjk1
+  user: admin
+  password: pass
   database: nodebb
   authSource: admin
 
