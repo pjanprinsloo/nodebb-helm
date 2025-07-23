@@ -4,8 +4,8 @@ metadata:
   name: {{ .Values.storage.className }}
 provisioner: blob.csi.azure.com
 parameters:
-  containerName: {{ .Values.nodebb.azure.containerName }}
-  storageAccount: {{ .Values.nodebb.azure.accountName }}
+  containerName: {{ .Values.nodebb.config.azure.containerName }}
+  storageAccount: {{ .Values.nodebb.config.azure.accountName }}
   protocol: https
   secretName: azureblob-secret
   secretNamespace: {{ .Release.Namespace }}
@@ -13,4 +13,3 @@ parameters:
   skuName: Standard_LRS
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
-
