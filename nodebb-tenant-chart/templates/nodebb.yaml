@@ -37,11 +37,19 @@ spec:
             - containerPort: 4567
           env:
             - name: CONFIG
-              value: "/opt/config/config.json" # ✅ NodeBB expects this
+              value: "/opt/config/config.json"  # NodeBB expects this for file-based config
             - name: PACKAGE_MANAGER
               value: "npm"
             - name: SETUP
-              value: "{{ .Values.nodebb.setup }}" # optional, NodeBB checks it
+              value: "{{ .Values.nodebb.setup | default "true" }}"
+            - name: admin_username
+              value: "{{ .Values.nodebb.config.admin.username }}"
+            - name: admin_password
+              value: "{{ .Values.nodebb.config.admin.password }}"
+            - name: admin_password_confirm
+              value: "{{ .Values.nodebb.config.admin.password }}"
+            - name: admin_email
+              value: "{{ .Values.nodebb.config.admin.email }}"
           volumeMounts:
             - name: config-volume
               mountPath: /opt/config
