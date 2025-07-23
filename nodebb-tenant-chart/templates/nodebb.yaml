@@ -18,6 +18,27 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 4567
+          env:
+            - name: MONGODB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: nodebb-secrets
+                  key: mongodb-user
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nodebb-secrets
+                  key: mongodb-password
+            - name: NODEBB_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: nodebb-secrets
+                  key: nodebb-secret
+            - name: AZURE_SAS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: nodebb-secrets
+                  key: azure-sas-token
           command:
             - /bin/sh
             - -c
@@ -26,17 +47,17 @@ spec:
               cat <<EOF > /usr/src/app/config.json
               {
                 "url": "{{ .Values.nodebb.config.url }}",
-                "secret": "{{ .Values.nodebb.config.secret }}",
+                "secret": "${NODEBB_SECRET}",
                 "database": "mongo",
                 "mongo": {
-                  "uri": "mongodb://{{ .Values.nodebb.config.mongodb.user }}:{{ .Values.nodebb.config.mongodb.password }}@{{ .Values.nodebb.config.mongodb.host }}:{{ .Values.nodebb.config.mongodb.port }}/{{ .Values.nodebb.config.mongodb.database }}?authSource={{ .Values.nodebb.config.mongodb.authSource }}"
+                  "uri": "mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@{{ .Values.mongodb.host }}:{{ .Values.mongodb.port }}/{{ .Values.mongodb.database }}?authSource={{ .Values.mongodb.authSource }}"
                 },
                 "admin": {
                   "username": "{{ .Values.nodebb.config.admin.username }}",
                   "password": "{{ .Values.nodebb.config.admin.password }}",
                   "email": "{{ .Values.nodebb.config.admin.email }}"
                 },
-                "upload_path": "https://{{ .Values.nodebb.config.azure.accountName }}.blob.core.windows.net/{{ .Values.nodebb.config.azure.containerName }}/{{ .Values.nodebb.config.azure.sasToken }}"
+                "upload_path": "https://{{ .Values.nodebb.config.azure.accountName }}.blob.core.windows.net/{{ .Values.nodebb.config.azure.containerName }}/?${AZURE_SAS_TOKEN}"
               }
               EOF
               ./nodebb build || true

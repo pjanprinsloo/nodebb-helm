@@ -1,5 +1,3 @@
-tenant: tenant
-
 image:
   repository: ghcr.io/pjanprinsloo/e2-nodebb
   tag: v1.0.6
@@ -7,23 +5,24 @@ image:
 
 nodebb:
   config:
-    url: "http://nodebb.localhost" # or use an Ingress later
-    secret: "mysecret"
-    mongodb:
-      host: mongo.default.svc.cluster.local
-      port: 27017
-      user: admin
-      password: pass
-      database: nodebb
-      authSource: admin
+    url: "http://nodebb.localhost"
+    secret: "mysecret" # fallback secret, will be injected via secret in actual deployment
     admin:
       username: "admin"
       password: "changeme"
       email: "admin@example.com"
     azure:
       accountName: "youraccount"
-      containerName: "nodebb-uploads"
+      containerName: "cxo-forum"
       sasToken: "?sp=..."
+
+mongodb:
+  host: "mongo.default.svc.cluster.local"
+  port: 27017
+  user: "cxo"
+  password: "Hdfs#289!@#sjk1"
+  database: "nodebb"
+  authSource: "admin"
 
 service:
   type: ClusterIP

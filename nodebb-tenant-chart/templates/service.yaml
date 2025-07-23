@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: nodebb
 spec:
-  type: {{ .Values.service.type | default "ClusterIP" }}
+  type: {{ .Values.service.type }}
   selector:
     app: nodebb
   ports:
-    - port: {{ .Values.service.port | default 80 }}
+    - port: {{ .Values.service.port }}
       targetPort: 4567
-
+      protocol: TCP
